@@ -2,6 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/Dijkstra.App/Dijkstra.App.csproj" />
     <Project Path="src/Dijkstra.Core/Dijkstra.Core.csproj" />
+    <Project Path="src/Dijkstra.Desktop/Dijkstra.Desktop.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Dijkstra.Tests/Dijkstra.Tests.csproj" />

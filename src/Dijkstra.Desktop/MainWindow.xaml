@@ -1,0 +1,95 @@
+<Window x:Class="Dijkstra.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Dijkstra.Desktop"
+        mc:Ignorable="d"
+        Title="Dijkstra Route Visualizer" Height="760" Width="1180"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="340"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left panel: parameterized network configuration -->
+        <ScrollViewer Grid.Column="0" Background="#F3F3F6" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="16">
+                <TextBlock Text="Network configuration" FontSize="18" FontWeight="Bold" Margin="0,0,0,12"/>
+
+                <TextBlock Text="1. Generate a random network" FontWeight="SemiBold"/>
+                <TextBlock Text="Demonstrates that the number of points is fully configurable at run time." FontSize="11" Foreground="Gray" TextWrapping="Wrap" Margin="0,2,0,6"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <TextBlock Text="Points:" VerticalAlignment="Center"/>
+                    <TextBox x:Name="RandomPointCountBox" Width="50" Margin="8,0,0,0" Text="8"/>
+                    <Button x:Name="GenerateRandomButton" Content="Generate" Margin="8,0,0,0" Padding="8,2" Click="GenerateRandomButton_Click"/>
+                </StackPanel>
+
+                <Separator Margin="0,0,0,12"/>
+
+                <TextBlock Text="2. Or build the network manually" FontWeight="SemiBold" Margin="0,0,0,6"/>
+
+                <TextBlock Text="Point id" FontSize="11" Foreground="Gray"/>
+                <StackPanel Orientation="Horizontal" Margin="0,2,0,10">
+                    <TextBox x:Name="NewPointIdBox" Width="190"/>
+                    <Button Content="Add point" Width="80" Margin="8,0,0,0" Click="AddPointButton_Click"/>
+                </StackPanel>
+
+                <TextBlock Text="Connection" FontSize="11" Foreground="Gray" Margin="0,0,0,2"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                    <TextBlock Text="From" Width="55" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="FromCombo" Width="120"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                    <TextBlock Text="To" Width="55" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="ToCombo" Width="120"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                    <TextBlock Text="Weight" Width="55" VerticalAlignment="Center"/>
+                    <TextBox x:Name="WeightBox" Width="120" Text="1"/>
+                </StackPanel>
+                <CheckBox x:Name="BidirectionalCheckBox" Content="Bidirectional" IsChecked="True" Margin="55,2,0,6"/>
+                <Button Content="Add connection" HorizontalAlignment="Left" Width="150" Click="AddConnectionButton_Click" Margin="0,0,0,12"/>
+
+                <Separator Margin="0,0,0,12"/>
+
+                <TextBlock Text="3. Calculate the optimal route" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                    <TextBlock Text="Start" Width="75" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="StartCombo" Width="190"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <TextBlock Text="Destination" Width="75" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="DestinationCombo" Width="190"/>
+                </StackPanel>
+                <Button Content="Calculate optimal route" FontWeight="Bold" Padding="4" Click="CalculateButton_Click" Margin="0,0,0,10"/>
+
+                <Border Background="White" BorderBrush="#CCCCCC" BorderThickness="1" Padding="8" Margin="0,0,0,16">
+                    <TextBlock x:Name="ResultText" Text="No route calculated yet." TextWrapping="Wrap"/>
+                </Border>
+
+                <Separator Margin="0,0,0,12"/>
+
+                <Button Content="Load sample network" Click="LoadSampleButton_Click" Margin="0,0,0,8"/>
+                <Button Content="Clear network" Click="ClearButton_Click"/>
+
+                <Separator Margin="0,16,0,8"/>
+                <TextBlock FontSize="11" Foreground="Gray" TextWrapping="Wrap">
+                    <Run Text="Legend: "/>
+                    <Run Text="green" Foreground="SeaGreen" FontWeight="Bold"/>
+                    <Run Text=" = start, "/>
+                    <Run Text="red" Foreground="IndianRed" FontWeight="Bold"/>
+                    <Run Text=" = destination, "/>
+                    <Run Text="orange" Foreground="Orange" FontWeight="Bold"/>
+                    <Run Text=" = on the optimal route."/>
+                </TextBlock>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Right panel: graphical rendering of the network -->
+        <Border Grid.Column="1" Background="White" BorderBrush="#DDDDDD" BorderThickness="1" Margin="8">
+            <Canvas x:Name="NetworkCanvas" Background="White" ClipToBounds="True" SizeChanged="NetworkCanvas_SizeChanged"/>
+        </Border>
+    </Grid>
+</Window>
