@@ -24,6 +24,9 @@ src/
   Dijkstra.App/              Console presentation layer
     Program.cs               Loads a network, prompts for start/destination, prints the route
     network.sample.json      Example 6-point network
+  Dijkstra.Desktop/          WPF presentation layer — graphical visualizer
+    MainWindow.xaml(.cs)     Draws points/connections on a canvas, highlights the optimal route,
+                             and exposes inputs to parameterize the network at run time
 tests/
   Dijkstra.Tests/            xUnit test suite (30 tests)
 ```
@@ -40,7 +43,9 @@ tests/
   domain model or the algorithm.
 - **Separation of concerns** follows the four layers called out in the brief: graph
   representation (`Domain`), route calculation (`Algorithms`), configuration
-  (`Configuration`), and presentation (`Dijkstra.App`).
+  (`Configuration`), and presentation — two independent presentation layers
+  (`Dijkstra.App` console, `Dijkstra.Desktop` WPF) both sit on top of the same
+  `Dijkstra.Core` library without it knowing either exists.
 - **Complexity:** `DijkstraAlgorithm` uses a binary-heap `PriorityQueue<string, double>`,
   giving `O((V + E) log V)` time, the standard bound for Dijkstra with a binary heap.
 - **Edge cases handled:** no route between two points, start equals destination,
@@ -55,6 +60,26 @@ dotnet run --project src/Dijkstra.App -- src/Dijkstra.App/network.sample.json A 
 
 Omit the start/destination arguments to be prompted interactively; omit the config path
 to use the bundled `network.sample.json`.
+
+## Running the desktop visualizer
+
+```bash
+dotnet run --project src/Dijkstra.Desktop
+```
+
+A graphical, standalone sample of the same `Dijkstra.Core` logic (Windows only — WPF).
+It draws the network's points and connections on a canvas and highlights the calculated
+optimal route (green = start, red = destination, orange = on the route). The network is
+fully parameterized from the UI:
+
+- **Generate a random network** — enter a point count and click *Generate* to build a
+  random connected network of that size (spanning tree + extra random connections).
+- **Build it manually** — add individual points, then connections between them with a
+  configurable weight and direction (bidirectional or not).
+- **Load sample network** — loads the same 6-point network as the console app.
+- Pick a **start** and **destination** from the current points and click
+  *Calculate optimal route* to run Dijkstra's algorithm and see the result both as text
+  (route + total cost, or "no route exists") and highlighted on the canvas.
 
 ## Running the tests
 
