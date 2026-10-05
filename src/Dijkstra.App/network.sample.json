@@ -1,0 +1,14 @@
+{
+  "nodes": ["A", "B", "C", "D", "E", "F"],
+  "connections": [
+    { "from": "A", "to": "B", "weight": 4, "bidirectional": true },
+    { "from": "A", "to": "C", "weight": 2, "bidirectional": true },
+    { "from": "C", "to": "B", "weight": 1, "bidirectional": true },
+    { "from": "B", "to": "D", "weight": 5, "bidirectional": true },
+    { "from": "C", "to": "D", "weight": 8, "bidirectional": true },
+    { "from": "C", "to": "E", "weight": 10, "bidirectional": true },
+    { "from": "D", "to": "E", "weight": 2, "bidirectional": true },
+    { "from": "D", "to": "F", "weight": 6, "bidirectional": true },
+    { "from": "E", "to": "F", "weight": 3, "bidirectional": true }
+  ]
+}
