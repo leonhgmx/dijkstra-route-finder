@@ -1,8 +1,9 @@
 namespace Dijkstra.Core.Domain;
 
 /// <summary>
-/// Mutable adjacency-list graph. The number of points and connections is entirely
-/// driven by what is added at runtime, so network size is never hardcoded.
+/// Grafo mutable por lista de adyacencia. La cantidad de puntos y conexiones depende
+/// enteramente de lo que se agregue en tiempo de ejecución, por lo que el tamaño de la
+/// red nunca queda fijo en el código.
 /// </summary>
 public sealed class Graph : IGraph
 {
@@ -20,8 +21,9 @@ public sealed class Graph : IGraph
     }
 
     /// <summary>
-    /// Adds a weighted connection from <paramref name="fromNodeId"/> to <paramref name="toNodeId"/>.
-    /// Both endpoints are created automatically if they do not already exist.
+    /// Agrega una conexión con peso desde <paramref name="fromNodeId"/> hacia
+    /// <paramref name="toNodeId"/>. Ambos extremos se crean automáticamente si no
+    /// existen todavía.
     /// </summary>
     public void AddEdge(string fromNodeId, string toNodeId, double weight, bool bidirectional = false)
     {
@@ -30,7 +32,7 @@ public sealed class Graph : IGraph
         if (weight < 0 || double.IsNaN(weight))
         {
             throw new ArgumentOutOfRangeException(nameof(weight), weight,
-                "Dijkstra's algorithm requires non-negative connection weights.");
+                "El algoritmo de Dijkstra requiere pesos de conexión no negativos.");
         }
 
         AddNode(fromNodeId);
@@ -52,7 +54,7 @@ public sealed class Graph : IGraph
     {
         if (string.IsNullOrWhiteSpace(nodeId))
         {
-            throw new ArgumentException("A point id must not be null or empty.", nameof(nodeId));
+            throw new ArgumentException("El id de un punto no puede ser nulo ni estar vacío.", nameof(nodeId));
         }
     }
 }

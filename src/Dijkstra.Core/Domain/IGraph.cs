@@ -1,17 +1,18 @@
 namespace Dijkstra.Core.Domain;
 
 /// <summary>
-/// Read-only view of a network of points and connections. Route-finding algorithms
-/// depend only on this abstraction, never on how the graph is built or stored.
+/// Vista de solo lectura de una red de puntos y conexiones. Los algoritmos de búsqueda
+/// de rutas dependen únicamente de esta abstracción, nunca de cómo se construye o
+/// almacena el grafo.
 /// </summary>
 public interface IGraph
 {
-    /// <summary>Every point currently known to the graph.</summary>
+    /// <summary>Todos los puntos actualmente conocidos por el grafo.</summary>
     IReadOnlyCollection<string> NodeIds { get; }
 
-    /// <summary>Whether a point with the given id exists in the graph.</summary>
+    /// <summary>Indica si existe un punto con el id dado en el grafo.</summary>
     bool ContainsNode(string nodeId);
 
-    /// <summary>All connections leaving the given point. Empty if the point has none.</summary>
+    /// <summary>Todas las conexiones que salen del punto dado. Vacío si no tiene ninguna.</summary>
     IEnumerable<Edge> GetOutgoingEdges(string nodeId);
 }

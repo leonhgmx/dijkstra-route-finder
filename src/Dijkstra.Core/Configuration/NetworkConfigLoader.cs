@@ -3,8 +3,9 @@ using System.Text.Json;
 namespace Dijkstra.Core.Configuration;
 
 /// <summary>
-/// Reads a <see cref="NetworkDefinition"/> from JSON, so the network a user wants to
-/// model (however many points it has) can be supplied externally, not hardcoded.
+/// Lee una <see cref="NetworkDefinition"/> desde JSON, de modo que la red que el
+/// usuario quiere modelar (sin importar cuántos puntos tenga) pueda suministrarse
+/// externamente en lugar de quedar fija en el código.
 /// </summary>
 public static class NetworkConfigLoader
 {
@@ -19,6 +20,6 @@ public static class NetworkConfigLoader
     public static NetworkDefinition LoadFromJson(string json)
     {
         var definition = JsonSerializer.Deserialize<NetworkDefinition>(json, Options);
-        return definition ?? throw new InvalidOperationException("The network configuration could not be parsed.");
+        return definition ?? throw new InvalidOperationException("No se pudo interpretar la configuración de la red.");
     }
 }

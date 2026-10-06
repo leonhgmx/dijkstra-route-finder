@@ -7,7 +7,7 @@ var configPath = args.Length > 0 ? args[0] : Path.Combine(AppContext.BaseDirecto
 
 if (!File.Exists(configPath))
 {
-    Console.Error.WriteLine($"Network configuration file not found: {configPath}");
+    Console.Error.WriteLine($"No se encontró el archivo de configuración de la red: {configPath}");
     return 1;
 }
 
@@ -20,14 +20,14 @@ try
 }
 catch (Exception ex) when (ex is JsonException or InvalidOperationException or ArgumentException)
 {
-    Console.Error.WriteLine($"Could not load network configuration: {ex.Message}");
+    Console.Error.WriteLine($"No se pudo cargar la configuración de la red: {ex.Message}");
     return 1;
 }
 
-Console.WriteLine($"Loaded network with {graph.NodeIds.Count} point(s) from '{Path.GetFileName(configPath)}'.");
+Console.WriteLine($"Red cargada con {graph.NodeIds.Count} punto(s) desde '{Path.GetFileName(configPath)}'.");
 
-var start = args.Length > 1 ? args[1] : PromptForNode(graph, "starting point");
-var destination = args.Length > 2 ? args[2] : PromptForNode(graph, "destination point");
+var start = args.Length > 1 ? args[1] : PromptForNode(graph, "punto de origen");
+var destination = args.Length > 2 ? args[2] : PromptForNode(graph, "punto de destino");
 
 IShortestPathAlgorithm algorithm = new DijkstraAlgorithm();
 
@@ -37,12 +37,12 @@ try
 
     if (!result.RouteFound)
     {
-        Console.WriteLine($"No route exists between '{start}' and '{destination}'.");
+        Console.WriteLine($"No existe ninguna ruta entre '{start}' y '{destination}'.");
         return 2;
     }
 
-    Console.WriteLine($"Optimal route: {string.Join(" -> ", result.Path)}");
-    Console.WriteLine($"Total cost: {result.TotalCost}");
+    Console.WriteLine($"Ruta óptima: {string.Join(" -> ", result.Path)}");
+    Console.WriteLine($"Costo total: {result.TotalCost}");
     return 0;
 }
 catch (ArgumentException ex)
@@ -53,7 +53,7 @@ catch (ArgumentException ex)
 
 static string PromptForNode(IGraph graph, string label)
 {
-    Console.WriteLine($"Available points: {string.Join(", ", graph.NodeIds)}");
-    Console.Write($"Enter {label}: ");
+    Console.WriteLine($"Puntos disponibles: {string.Join(", ", graph.NodeIds)}");
+    Console.Write($"Ingresa el {label}: ");
     return Console.ReadLine()?.Trim() ?? string.Empty;
 }

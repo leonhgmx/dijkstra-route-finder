@@ -1,94 +1,99 @@
-# Dijkstra — Optimal Route Finder
+# Dijkstra — Buscador de Ruta Óptima
 
-A C# implementation of Dijkstra's shortest-path algorithm over a configurable network
-of points and weighted connections.
+Implementación en C# del algoritmo de Dijkstra para encontrar la ruta de menor costo
+sobre una red configurable de puntos y conexiones con peso.
 
-## Solution layout
+## Estructura de la solución
 
 ```
 Dijkstra.sln
 src/
-  Dijkstra.Core/            Class library — all the logic that matters
-    Domain/                 Points, connections, and the graph abstraction
-      IGraph.cs             Read-only contract the algorithm depends on
-      Graph.cs              Adjacency-list implementation (size is never hardcoded)
-      Edge.cs                A weighted, directed connection
-    Algorithms/             Route calculation
+  Dijkstra.Core/            Biblioteca de clases — toda la lógica que importa
+    Domain/                 Puntos, conexiones y la abstracción del grafo
+      IGraph.cs             Contrato de solo lectura del que depende el algoritmo
+      Graph.cs              Implementación por lista de adyacencia (el tamaño nunca está fijo en el código)
+      Edge.cs                Una conexión dirigida con peso
+    Algorithms/             Cálculo de rutas
       IShortestPathAlgorithm.cs
-      DijkstraAlgorithm.cs  The algorithm itself — depends only on IGraph
-      PathResult.cs         Route + total cost, or "no route exists"
-    Configuration/          Turns external network definitions into a graph
-      NetworkDefinition.cs  Plain DTOs (nodes + connections)
-      NetworkConfigLoader.cs  Reads a NetworkDefinition from JSON
+      DijkstraAlgorithm.cs  El algoritmo en sí — depende únicamente de IGraph
+      PathResult.cs         Ruta + costo total, o "no existe ruta"
+    Configuration/          Convierte definiciones externas de red en un grafo
+      NetworkDefinition.cs  DTOs simples (puntos + conexiones)
+      NetworkConfigLoader.cs  Lee una NetworkDefinition desde JSON
       GraphFactory.cs       NetworkDefinition -> IGraph
-  Dijkstra.App/              Console presentation layer
-    Program.cs               Loads a network, prompts for start/destination, prints the route
-    network.sample.json      Example 6-point network
-  Dijkstra.Desktop/          WPF presentation layer — graphical visualizer
-    MainWindow.xaml(.cs)     Draws points/connections on a canvas, highlights the optimal route,
-                             and exposes inputs to parameterize the network at run time
+  Dijkstra.App/              Capa de presentación por consola
+    Program.cs               Carga una red, pregunta origen/destino, imprime la ruta
+    network.sample.json      Red de ejemplo con 6 puntos
+  Dijkstra.Desktop/          Capa de presentación WPF — visualizador gráfico
+    MainWindow.xaml(.cs)     Dibuja puntos/conexiones en un canvas, resalta la ruta óptima
+                             y expone controles para parametrizar la red en tiempo de ejecución
 tests/
-  Dijkstra.Tests/            xUnit test suite (30 tests)
+  Dijkstra.Tests/            Suite de pruebas xUnit (30 pruebas)
 ```
 
-## Design notes
+## Notas de diseño
 
-- **The algorithm never knows how big the network is or how it was built.**
-  `DijkstraAlgorithm` only depends on `IGraph`, an interface exposing node ids and
-  outgoing edges. Whether the graph has 5 points or 5,000, built from code, from JSON,
-  or from a database, the algorithm is unaffected.
-- **Network size and structure are external configuration, not code.**
-  `NetworkDefinition` + `NetworkConfigLoader` let a network of any size be described in
-  a JSON file and turned into a graph via `GraphFactory`, with zero changes to the
-  domain model or the algorithm.
-- **Separation of concerns** follows the four layers called out in the brief: graph
-  representation (`Domain`), route calculation (`Algorithms`), configuration
-  (`Configuration`), and presentation — two independent presentation layers
-  (`Dijkstra.App` console, `Dijkstra.Desktop` WPF) both sit on top of the same
-  `Dijkstra.Core` library without it knowing either exists.
-- **Complexity:** `DijkstraAlgorithm` uses a binary-heap `PriorityQueue<string, double>`,
-  giving `O((V + E) log V)` time, the standard bound for Dijkstra with a binary heap.
-- **Edge cases handled:** no route between two points, start equals destination,
-  single-point networks, unknown start/destination points (throws `ArgumentException`),
-  and rejection of negative connection weights (Dijkstra's precondition).
+- **El algoritmo nunca sabe qué tan grande es la red ni cómo fue construida.**
+  `DijkstraAlgorithm` depende únicamente de `IGraph`, una interfaz que expone los
+  identificadores de los puntos y las conexiones salientes. Ya sea que la red tenga
+  5 puntos o 5000, construida desde código, desde JSON o desde una base de datos, el
+  algoritmo no se ve afectado.
+- **El tamaño y la estructura de la red son configuración externa, no código.**
+  `NetworkDefinition` + `NetworkConfigLoader` permiten describir una red de cualquier
+  tamaño en un archivo JSON y convertirla en un grafo mediante `GraphFactory`, sin
+  modificar el modelo de dominio ni el algoritmo.
+- **La separación de responsabilidades** sigue las capas pedidas en el enunciado:
+  representación del grafo (`Domain`), cálculo de rutas (`Algorithms`), configuración
+  (`Configuration`) y presentación — dos capas de presentación independientes
+  (`Dijkstra.App` por consola, `Dijkstra.Desktop` por WPF) se apoyan sobre la misma
+  biblioteca `Dijkstra.Core` sin que esta sepa que alguna de las dos existe.
+- **Complejidad:** `DijkstraAlgorithm` usa una cola de prioridad con heap binario
+  (`PriorityQueue<string, double>`), lo que da un tiempo de `O((V + E) log V)`, la cota
+  estándar para Dijkstra con heap binario.
+- **Casos límite manejados:** ausencia de ruta entre dos puntos, origen igual a destino,
+  redes de un solo punto, puntos de origen/destino desconocidos (lanza
+  `ArgumentException`), y rechazo de pesos de conexión negativos (precondición de
+  Dijkstra).
 
-## Running the console app
+## Ejecutar la aplicación de consola
 
 ```bash
 dotnet run --project src/Dijkstra.App -- src/Dijkstra.App/network.sample.json A F
 ```
 
-Omit the start/destination arguments to be prompted interactively; omit the config path
-to use the bundled `network.sample.json`.
+Omite los argumentos de origen/destino para que se pidan de forma interactiva; omite la
+ruta de configuración para usar el `network.sample.json` incluido.
 
-## Running the desktop visualizer
+## Ejecutar el visualizador de escritorio
 
 ```bash
 dotnet run --project src/Dijkstra.Desktop
 ```
 
-A graphical, standalone sample of the same `Dijkstra.Core` logic (Windows only — WPF).
-It draws the network's points and connections on a canvas and highlights the calculated
-optimal route (green = start, red = destination, orange = on the route). The network is
-fully parameterized from the UI:
+Una muestra gráfica e independiente de la misma lógica de `Dijkstra.Core` (solo Windows —
+WPF). Dibuja los puntos y conexiones de la red en un canvas y resalta la ruta óptima
+calculada (verde = origen, rojo = destino, naranja = parte de la ruta). La red es
+completamente parametrizable desde la interfaz:
 
-- **Generate a random network** — enter a point count and click *Generate* to build a
-  random connected network of that size (spanning tree + extra random connections).
-- **Build it manually** — add individual points, then connections between them with a
-  configurable weight and direction (bidirectional or not).
-- **Load sample network** — loads the same 6-point network as the console app.
-- Pick a **start** and **destination** from the current points and click
-  *Calculate optimal route* to run Dijkstra's algorithm and see the result both as text
-  (route + total cost, or "no route exists") and highlighted on the canvas.
+- **Generar una red aleatoria** — ingresa una cantidad de puntos y haz clic en *Generar*
+  para construir una red conexa aleatoria de ese tamaño (árbol de expansión + conexiones
+  extra aleatorias).
+- **Construirla manualmente** — agrega puntos individuales y luego conexiones entre ellos
+  con un peso y una dirección configurables (bidireccional o no).
+- **Cargar la red de ejemplo** — carga la misma red de 6 puntos que usa la app de consola.
+- Elige un **origen** y un **destino** entre los puntos actuales y haz clic en *Calcular
+  ruta óptima* para ejecutar el algoritmo de Dijkstra y ver el resultado tanto en texto
+  (ruta + costo total, o "no existe ruta") como resaltado en el canvas.
 
-## Running the tests
+## Ejecutar las pruebas
 
 ```bash
 dotnet test
 ```
 
-The suite covers: a simple graph with a known optimal route, a graph where the direct
-connection is not optimal, multiple possible routes, a graph with no route between
-origin and destination, a single-point graph, varying network sizes (5/10/50/100
-points), varying connection weights, total-cost correctness, and that the returned
-path is actually optimal (cross-checked against a brute-force search).
+La suite cubre: un grafo simple con una ruta óptima conocida, un grafo donde la conexión
+directa no es la óptima, múltiples rutas posibles, un grafo sin ruta entre origen y
+destino, un grafo de un solo punto, distintos tamaños de red (5/10/50/100 puntos),
+conexiones con distintos pesos, la corrección del costo total calculado, y que la ruta
+devuelta sea efectivamente óptima (verificado de forma cruzada contra una búsqueda por
+fuerza bruta).

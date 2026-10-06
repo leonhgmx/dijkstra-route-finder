@@ -3,8 +3,8 @@ using Dijkstra.Core.Domain;
 namespace Dijkstra.Core.Algorithms;
 
 /// <summary>
-/// Computes the lowest-cost route between two points of an <see cref="IGraph"/>.
-/// Implementations must not depend on the size or structure of the graph.
+/// Calcula la ruta de menor costo entre dos puntos de un <see cref="IGraph"/>.
+/// Las implementaciones no deben depender del tamaño ni de la estructura del grafo.
 /// </summary>
 public interface IShortestPathAlgorithm
 {

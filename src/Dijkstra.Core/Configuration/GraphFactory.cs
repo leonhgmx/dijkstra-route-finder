@@ -3,8 +3,8 @@ using Dijkstra.Core.Domain;
 namespace Dijkstra.Core.Configuration;
 
 /// <summary>
-/// Builds an <see cref="IGraph"/> from a <see cref="NetworkDefinition"/>. This is the
-/// single place that translates external configuration into the domain model.
+/// Construye un <see cref="IGraph"/> a partir de una <see cref="NetworkDefinition"/>.
+/// Es el único lugar que traduce la configuración externa al modelo de dominio.
 /// </summary>
 public static class GraphFactory
 {

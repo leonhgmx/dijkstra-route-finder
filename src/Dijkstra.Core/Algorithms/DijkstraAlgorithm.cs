@@ -3,9 +3,9 @@ using Dijkstra.Core.Domain;
 namespace Dijkstra.Core.Algorithms;
 
 /// <summary>
-/// Classic Dijkstra shortest-path algorithm backed by a binary-heap priority queue.
-/// Runs in O((V + E) log V) and works against the <see cref="IGraph"/> abstraction only,
-/// so it is agnostic to network size and structure.
+/// Algoritmo clásico de Dijkstra apoyado en una cola de prioridad con heap binario.
+/// Se ejecuta en O((V + E) log V) y trabaja únicamente contra la abstracción
+/// <see cref="IGraph"/>, por lo que es independiente del tamaño y la estructura de la red.
 /// </summary>
 public sealed class DijkstraAlgorithm : IShortestPathAlgorithm
 {
@@ -15,12 +15,12 @@ public sealed class DijkstraAlgorithm : IShortestPathAlgorithm
 
         if (!graph.ContainsNode(startNodeId))
         {
-            throw new ArgumentException($"Start point '{startNodeId}' does not exist in the network.", nameof(startNodeId));
+            throw new ArgumentException($"El punto de origen '{startNodeId}' no existe en la red.", nameof(startNodeId));
         }
 
         if (!graph.ContainsNode(destinationNodeId))
         {
-            throw new ArgumentException($"Destination point '{destinationNodeId}' does not exist in the network.", nameof(destinationNodeId));
+            throw new ArgumentException($"El punto de destino '{destinationNodeId}' no existe en la red.", nameof(destinationNodeId));
         }
 
         var distances = new Dictionary<string, double> { [startNodeId] = 0 };

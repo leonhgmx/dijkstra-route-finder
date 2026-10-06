@@ -10,9 +10,10 @@ using Dijkstra.Core.Domain;
 namespace Dijkstra.Desktop;
 
 /// <summary>
-/// Graphical sample application. It is a standalone presentation layer: it only ever
-/// talks to Dijkstra.Core's public types (<see cref="Graph"/>, <see cref="IShortestPathAlgorithm"/>,
-/// <see cref="GraphFactory"/>) and renders whatever network and result they produce.
+/// Aplicación de muestra gráfica. Es una capa de presentación independiente: solo se
+/// comunica con los tipos públicos de Dijkstra.Core (<see cref="Graph"/>,
+/// <see cref="IShortestPathAlgorithm"/>, <see cref="GraphFactory"/>) y dibuja la red y
+/// el resultado que estos produzcan.
 /// </summary>
 public partial class MainWindow : Window
 {
@@ -36,19 +37,19 @@ public partial class MainWindow : Window
         var id = NewPointIdBox.Text.Trim();
         if (string.IsNullOrWhiteSpace(id))
         {
-            ShowResult("Enter a point id before adding it.", isError: true);
+            ShowResult("Ingresa un id de punto antes de agregarlo.", isError: true);
             return;
         }
 
         if (_graph.ContainsNode(id))
         {
-            ShowResult($"Point '{id}' already exists.", isError: true);
+            ShowResult($"El punto '{id}' ya existe.", isError: true);
             return;
         }
 
         _graph.AddNode(id);
         NewPointIdBox.Clear();
-        ShowResult($"Point '{id}' added.", isError: false);
+        ShowResult($"Punto '{id}' agregado.", isError: false);
         RefreshAfterGraphChange();
     }
 
@@ -59,13 +60,13 @@ public partial class MainWindow : Window
 
         if (from is null || to is null)
         {
-            ShowResult("Select both a 'from' and a 'to' point.", isError: true);
+            ShowResult("Selecciona un punto de origen ('Desde') y uno de destino ('Hasta').", isError: true);
             return;
         }
 
         if (!double.TryParse(WeightBox.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var weight))
         {
-            ShowResult("Weight must be a number.", isError: true);
+            ShowResult("El peso debe ser un número.", isError: true);
             return;
         }
 
@@ -79,7 +80,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        ShowResult($"Connection {from} -> {to} (weight {weight}) added.", isError: false);
+        ShowResult($"Conexión {from} -> {to} (peso {weight}) agregada.", isError: false);
         RefreshAfterGraphChange();
     }
 
@@ -87,7 +88,7 @@ public partial class MainWindow : Window
     {
         if (!int.TryParse(RandomPointCountBox.Text, out var pointCount) || pointCount < 1 || pointCount > 200)
         {
-            ShowResult("Enter a point count between 1 and 200.", isError: true);
+            ShowResult("Ingresa una cantidad de puntos entre 1 y 200.", isError: true);
             return;
         }
 
@@ -98,14 +99,14 @@ public partial class MainWindow : Window
             graph.AddNode(id);
         }
 
-        // A random spanning tree guarantees every point is reachable, regardless of size.
+        // Un árbol de expansión aleatorio garantiza que todos los puntos sean alcanzables, sin importar el tamaño.
         for (var i = 1; i < pointCount; i++)
         {
             var parent = ids[_random.Next(i)];
             graph.AddEdge(parent, ids[i], _random.Next(1, 20), bidirectional: true);
         }
 
-        // A handful of extra connections so more than one route usually exists.
+        // Algunas conexiones extra para que normalmente existan varias rutas posibles.
         var extraConnections = pointCount / 2;
         for (var i = 0; i < extraConnections; i++)
         {
@@ -121,7 +122,7 @@ public partial class MainWindow : Window
 
         _graph = graph;
         _lastResult = null;
-        ShowResult($"Generated a random network with {pointCount} point(s).", isError: false);
+        ShowResult($"Se generó una red aleatoria con {pointCount} punto(s).", isError: false);
         RefreshAfterGraphChange();
     }
 
@@ -132,7 +133,7 @@ public partial class MainWindow : Window
 
         if (start is null || destination is null)
         {
-            ShowResult("Select both a start and a destination point.", isError: true);
+            ShowResult("Selecciona un punto de origen y uno de destino.", isError: true);
             return;
         }
 
@@ -149,12 +150,12 @@ public partial class MainWindow : Window
         if (_lastResult.RouteFound)
         {
             ShowResult(
-                $"Optimal route: {string.Join(" -> ", _lastResult.Path)}\nTotal cost: {_lastResult.TotalCost}",
+                $"Ruta óptima: {string.Join(" -> ", _lastResult.Path)}\nCosto total: {_lastResult.TotalCost}",
                 isError: false);
         }
         else
         {
-            ShowResult($"No route exists between '{start}' and '{destination}'.", isError: true);
+            ShowResult($"No existe ninguna ruta entre '{start}' y '{destination}'.", isError: true);
         }
 
         Redraw();
@@ -181,7 +182,7 @@ public partial class MainWindow : Window
 
         _graph = (Graph)GraphFactory.CreateFromDefinition(definition);
         _lastResult = null;
-        ShowResult("Loaded the sample network (points A-F).", isError: false);
+        ShowResult("Se cargó la red de ejemplo (puntos A-F).", isError: false);
         RefreshAfterGraphChange();
     }
 
@@ -189,7 +190,7 @@ public partial class MainWindow : Window
     {
         _graph = new Graph();
         _lastResult = null;
-        ShowResult("Network cleared.", isError: false);
+        ShowResult("Red limpiada.", isError: false);
         RefreshAfterGraphChange();
     }
 
@@ -378,7 +379,7 @@ public partial class MainWindow : Window
         var ux = dx / length;
         var uy = dy / length;
 
-        // Stop the tip at the destination node's edge rather than its center.
+        // La punta de la flecha termina en el borde del nodo destino, no en su centro.
         var tip = new Point(to.X - ux * NodeRadius, to.Y - uy * NodeRadius);
         var baseCenter = new Point(tip.X - ux * arrowLength, tip.Y - uy * arrowLength);
         var perpX = -uy;

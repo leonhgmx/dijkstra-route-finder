@@ -1,8 +1,8 @@
 namespace Dijkstra.Core.Algorithms;
 
 /// <summary>
-/// Outcome of a route-finding query: either the ordered sequence of points and the
-/// total cost of the optimal route, or an indication that no route exists.
+/// Resultado de una búsqueda de ruta: la secuencia ordenada de puntos y el costo total
+/// de la ruta óptima, o la indicación de que no existe ninguna ruta.
 /// </summary>
 public sealed class PathResult
 {
