@@ -11,7 +11,7 @@ public class DijkstraAlgorithmTests
     [Fact]
     public void FindShortestPath_SimpleGraph_ReturnsKnownOptimalRoute()
     {
-        // A -> B -> C costs 2, the direct A -> C edge costs 5.
+        // A -> B -> C cuesta 2, la conexión directa A -> C cuesta 5.
         var graph = new Graph();
         graph.AddEdge("A", "B", 1);
         graph.AddEdge("B", "C", 1);
@@ -28,9 +28,9 @@ public class DijkstraAlgorithmTests
     public void FindShortestPath_DirectConnectionIsNotOptimal_PrefersCheaperDetour()
     {
         var graph = new Graph();
-        graph.AddEdge("A", "B", 10); // direct, expensive
+        graph.AddEdge("A", "B", 10); // directa, costosa
         graph.AddEdge("A", "C", 1);
-        graph.AddEdge("C", "B", 1); // detour, cheaper overall
+        graph.AddEdge("C", "B", 1); // desvío, más económico en total
 
         var result = _algorithm.FindShortestPath(graph, "A", "B");
 
@@ -62,9 +62,9 @@ public class DijkstraAlgorithmTests
     public void FindShortestPath_NoRouteExists_ReturnsNotFound()
     {
         var graph = new Graph();
-        graph.AddNode("A"); // isolated point, no outgoing connections
+        graph.AddNode("A"); // punto aislado, sin conexiones salientes
         graph.AddNode("C");
-        graph.AddEdge("C", "B", 1); // B is only reachable from C, not from A
+        graph.AddEdge("C", "B", 1); // B solo es alcanzable desde C, no desde A
 
         var result = _algorithm.FindShortestPath(graph, "A", "B");
 
@@ -129,7 +129,7 @@ public class DijkstraAlgorithmTests
     [InlineData(100)]
     public void FindShortestPath_ScalesAcrossDifferentNetworkSizes(int nodeCount)
     {
-        // A chain of `nodeCount` points, each connected to the next with weight 1.
+        // Una cadena de `nodeCount` puntos, cada uno conectado al siguiente con peso 1.
         var graph = new Graph();
         for (var i = 0; i < nodeCount - 1; i++)
         {
@@ -188,7 +188,7 @@ public class DijkstraAlgorithmTests
         Assert.Equal(result.TotalCost, accumulated, precision: 6);
     }
 
-    /// <summary>Exhaustive DFS search used only to independently verify Dijkstra's result in tests.</summary>
+    /// <summary>Búsqueda DFS exhaustiva usada solo para verificar de forma independiente el resultado de Dijkstra en las pruebas.</summary>
     private static double BruteForceShortestCost(IGraph graph, string start, string destination)
     {
         var best = double.PositiveInfinity;
